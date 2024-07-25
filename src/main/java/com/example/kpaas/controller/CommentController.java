@@ -1,6 +1,6 @@
 package com.example.kpaas.controller;
 
-import com.example.kpaas.dto.request.CommentLikeRequest;
+import com.example.kpaas.dto.request.CommentRequest;
 import com.example.kpaas.dto.response.CommentLikeResponse;
 import com.example.kpaas.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CommentController {
     @PostMapping("/like")
     public ResponseEntity<CommentLikeResponse> likeComment(
             @RequestHeader("access") String accessToken,
-            @RequestBody CommentLikeRequest request) {
+            @RequestBody CommentRequest request) {
         return ResponseEntity.ok(commentService.likeComment(accessToken, request));
     }
 

@@ -1,6 +1,7 @@
 package com.example.kpaas.service;
 
 import com.example.kpaas.dto.request.CommentLikeRequest;
+import com.example.kpaas.dto.request.CommentRequest;
 import com.example.kpaas.dto.response.CommentLikeResponse;
 import com.example.kpaas.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public CommentLikeResponse likeComment(String accessToken, CommentLikeRequest request) {
+    public CommentLikeResponse likeComment(String accessToken, CommentRequest request) {
         // Implement comment liking logic
         return null;
     }
