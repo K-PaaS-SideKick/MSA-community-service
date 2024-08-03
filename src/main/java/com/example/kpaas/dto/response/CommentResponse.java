@@ -1,9 +1,11 @@
 package com.example.kpaas.dto.response;
 
+import java.time.LocalDateTime;
+
 public class CommentResponse {
     private Long commentId;
     private Long uid;
-    private String nickname;
+    private LocalDateTime createdAt;
     private String content;
     private Long parentComment;
 
@@ -25,12 +27,12 @@ public class CommentResponse {
         this.uid = uid;
     }
 
-    public String getNickname() {
-        return nickname;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getContent() {

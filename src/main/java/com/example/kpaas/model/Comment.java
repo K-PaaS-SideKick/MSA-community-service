@@ -1,20 +1,29 @@
 package com.example.kpaas.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
+
     private Long uid;
-    private String nickname;
     private String content;
     private int likes;
     private Long postId;
 
     @ManyToOne
     private Comment parentComment;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     // Getters and setters
 
@@ -32,14 +41,6 @@ public class Comment {
 
     public void setUid(Long uid) {
         this.uid = uid;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getContent() {
@@ -67,10 +68,18 @@ public class Comment {
     }
 
     public Long getPostId() {
-        return commentId;
+        return postId;
     }
 
     public void setPostId(Long postId) {
-        this.commentId = postId;
+        this.postId = postId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

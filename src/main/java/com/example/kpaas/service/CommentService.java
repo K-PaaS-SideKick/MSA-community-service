@@ -39,7 +39,7 @@ public class CommentService {
         CommentResponse response = new CommentResponse();
         response.setCommentId(comment.getCommentId());
         response.setContent(comment.getContent());
-        response.setNickname(comment.getNickname());
+        response.setCreatedAt(comment.getCreatedAt());
         response.setParentComment(comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null);
         // Set other fields
         return response;
