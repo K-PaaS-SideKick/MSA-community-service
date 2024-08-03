@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    @Query("SELECT p FROM Post p WHERE p.category IN :categories AND (p.title LIKE %:query% OR p.content LIKE %:query%)")
+    @Query("SELECT p FROM Post p WHERE EXISTS (SELECT c FROM p.category c WHERE c IN :categories) AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.content) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Post> searchPosts(@Param("categories") List<String> categories, @Param("query") String query);
 }

@@ -1,6 +1,7 @@
 package com.example.kpaas.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class Post {
     private LocalDate date;
 
     @ElementCollection
+    @CollectionTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "category")
     private List<String> category;
 
     // Getters and setters

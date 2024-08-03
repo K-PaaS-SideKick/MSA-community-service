@@ -7,6 +7,10 @@ import com.example.kpaas.model.Post;
 import com.example.kpaas.repository.PostRepository;
 import com.example.kpaas.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,13 +22,16 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
     private CommentRepository commentRepository;
 
     public List<PostResponse> getPosts(int page, String sortBy) {
-        // Logic to fetch and return posts based on page and sorting
-        List<Post> posts = postRepository.findAll(); // Add pagination and sorting
-        return posts.stream().map(post -> new PostResponse(post.getPostId(), post.getTitle())).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sortBy));
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.stream().map(post -> new PostResponse(post.getPostId(), post.getTitle())).collect(Collectors.toList());
     }
+
 
     public List<PostResponse> searchPosts(SearchRequest searchRequest) {
         List<Post> posts = postRepository.searchPosts(searchRequest.getCategory(), searchRequest.getQuery());
@@ -32,86 +39,63 @@ public class PostService {
     }
 
     public PostDetails getPostDetails(Long postId) {
-        // Logic to fetch and return post details
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         return convertToDetails(post);
     }
 
     public PostResponse createPost(String accessToken, CreatePostRequest request) {
-        // Logic to create a new post
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
         post.setCategory(request.getCategory());
         post.setDate(LocalDate.now());
-        // Add other fields and logic
         postRepository.save(post);
         return new PostResponse(post.getPostId(), post.getTitle());
     }
 
     public PostResponse updatePost(Long postId, String accessToken, UpdatePostRequest request) {
-        // Logic to update an existing post
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
         post.setCategory(request.getCategory());
-        // Add other fields and logic
         postRepository.save(post);
         return new PostResponse(post.getPostId(), post.getTitle());
     }
 
     public void deletePost(Long postId, String accessToken) {
-        // Logic to delete a post
         postRepository.deleteById(postId);
     }
 
     public LikeResponse likePost(String accessToken, LikeRequest request) {
-        // Logic to handle post likes
-        Post post = postRepository.findById(request.getPostId()).orElseThrow();
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setLike(post.getLike() + 1);
         postRepository.save(post);
         return new LikeResponse(post.getPostId(), post.getLike());
     }
 
     public CommentResponse addComment(String accessToken, CommentRequest request) {
-        // Logic to add a comment to a post
         Comment comment = new Comment();
         comment.setContent(request.getContent());
         comment.setPostId(request.getPostId());
         comment.setParentComment(request.getParentComment() != null ? commentRepository.findById(request.getParentComment()).orElse(null) : null);
-        // Add other fields and logic
         commentRepository.save(comment);
-        // Update the post's comment count
-        Post post = postRepository.findById(request.getPostId()).orElseThrow();
+
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setComments(post.getComments() + 1);
         postRepository.save(post);
-        return new CommentResponse();
-    }
 
-/*    private CommentResponse convertToCommentResponse(Comment comment) {
-        CommentResponse response = new CommentResponse();
-        response.setCommentId(comment.getCommentId());
-        response.setContent(comment.getContent());
-        response.setPostId(comment.getPostId());
-        response.setUid(comment.getUid());
-        response.setNickname(comment.getNickname());
-        response.setLikes(comment.getLikes());
-        // 필요한 경우 부모 댓글 정보 설정
-        return response;
+        return new CommentResponse(); // 필요한 정보를 설정해 주세요
     }
-*/
 
     public ScrapResponse scrapPost(Long postId, String accessToken) {
-        // Logic to scrap a post
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setScraps(post.getScraps() + 1);
         postRepository.save(post);
         return new ScrapResponse(post.getPostId(), post.getScraps());
     }
 
     public ScrapResponse unscrapPost(Long postId, String accessToken) {
-        // Logic to unscrap a post
-        Post post = postRepository.findById(postId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setScraps(post.getScraps() - 1);
         postRepository.save(post);
         return new ScrapResponse(post.getPostId(), post.getScraps());
