@@ -3,14 +3,18 @@ package com.example.kpaas.dto.response;
 import java.time.LocalDateTime;
 
 public class CommentResponse {
-    private Long commentId;
-    private Long uid;
-    private LocalDateTime createdAt;
-    private String content;
-    private Long parentComment;
 
-    // Getters and setters
+    private Long commentId;          // 댓글 ID
+    private Long postId;             // 게시물 ID
+    private Long parentComment;      // 부모 댓글 ID (답글일 경우)
+    private String content;          // 댓글 내용
+    private int likes;               // 좋아요 수
+    private LocalDateTime createdAt; // 생성 일시
 
+    public CommentResponse(Long commentId, String content, LocalDateTime createdAt) {
+    }
+
+    // Getters and Setters
     public Long getCommentId() {
         return commentId;
     }
@@ -19,20 +23,20 @@ public class CommentResponse {
         this.commentId = commentId;
     }
 
-    public Long getUid() {
-        return uid;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Long getParentComment() {
+        return parentComment;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setParentComment(Long parentComment) {
+        this.parentComment = parentComment;
     }
 
     public String getContent() {
@@ -43,11 +47,19 @@ public class CommentResponse {
         this.content = content;
     }
 
-    public Long getParentComment() {
-        return parentComment;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setParentComment(Long parentComment) {
-        this.parentComment = parentComment;
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

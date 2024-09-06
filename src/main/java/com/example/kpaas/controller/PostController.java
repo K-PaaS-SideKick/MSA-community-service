@@ -20,24 +20,28 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> getPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "recent") String sortBy) {
-        return ResponseEntity.ok(postService.getPosts(page, sortBy));
+        List<PostResponse> posts = postService.getPosts(page, sortBy);
+        return ResponseEntity.ok(posts);
     }
 
     @PostMapping("/search")
     public ResponseEntity<List<PostResponse>> searchPosts(@RequestBody SearchRequest searchRequest) {
-        return ResponseEntity.ok(postService.searchPosts(searchRequest));
+        List<PostResponse> posts = postService.searchPosts(searchRequest);
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/details")
     public ResponseEntity<PostDetails> getPostDetails(@RequestParam Long postId) {
-        return ResponseEntity.ok(postService.getPostDetails(postId));
+        PostDetails postDetails = postService.getPostDetails(postId);
+        return ResponseEntity.ok(postDetails);
     }
 
     @PostMapping("/new")
     public ResponseEntity<PostResponse> createPost(
             @RequestHeader("access") String accessToken,
             @RequestBody CreatePostRequest request) {
-        return ResponseEntity.ok(postService.createPost(accessToken, request));
+        PostResponse postResponse = postService.createPost(accessToken, request);
+        return ResponseEntity.ok(postResponse);
     }
 
     @PutMapping("/{postId}")
@@ -45,7 +49,8 @@ public class PostController {
             @PathVariable Long postId,
             @RequestHeader("access") String accessToken,
             @RequestBody UpdatePostRequest request) {
-        return ResponseEntity.ok(postService.updatePost(postId, accessToken, request));
+        PostResponse postResponse = postService.updatePost(postId, accessToken, request);
+        return ResponseEntity.ok(postResponse);
     }
 
     @DeleteMapping("/{postId}")
@@ -60,27 +65,31 @@ public class PostController {
     public ResponseEntity<LikeResponse> likePost(
             @RequestHeader("access") String accessToken,
             @RequestBody LikeRequest request) {
-        return ResponseEntity.ok(postService.likePost(accessToken, request));
+        LikeResponse likeResponse = postService.likePost(accessToken, request);
+        return ResponseEntity.ok(likeResponse);
     }
 
     @PostMapping("/comment")
     public ResponseEntity<CommentResponse> addComment(
             @RequestHeader("access") String accessToken,
             @RequestBody CommentRequest request) {
-        return ResponseEntity.ok(postService.addComment(accessToken, request));
+        CommentResponse commentResponse = postService.addComment(accessToken, request);
+        return ResponseEntity.ok(commentResponse);
     }
 
     @PostMapping("/{postId}/scrap")
     public ResponseEntity<ScrapResponse> scrapPost(
             @PathVariable Long postId,
             @RequestHeader("access") String accessToken) {
-        return ResponseEntity.ok(postService.scrapPost(postId, accessToken));
+        ScrapResponse scrapResponse = postService.scrapPost(postId, accessToken);
+        return ResponseEntity.ok(scrapResponse);
     }
 
     @DeleteMapping("/{postId}/scrap")
     public ResponseEntity<ScrapResponse> unscrapPost(
             @PathVariable Long postId,
             @RequestHeader("access") String accessToken) {
-        return ResponseEntity.ok(postService.unscrapPost(postId, accessToken));
+        ScrapResponse scrapResponse = postService.unscrapPost(postId, accessToken);
+        return ResponseEntity.ok(scrapResponse);
     }
 }

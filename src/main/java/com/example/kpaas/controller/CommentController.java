@@ -18,7 +18,8 @@ public class CommentController {
     public ResponseEntity<CommentLikeResponse> likeComment(
             @RequestHeader("access") String accessToken,
             @RequestBody CommentRequest request) {
-        return ResponseEntity.ok(commentService.likeComment(accessToken, request));
+        CommentLikeResponse response = commentService.likeComment(accessToken, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{commentId}")

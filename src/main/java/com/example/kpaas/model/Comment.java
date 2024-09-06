@@ -2,24 +2,64 @@ package com.example.kpaas.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Entity
 public class Comment {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long commentId;
+//
+//    private Long uid;
+//    private String content;
+//    private int likes;
+//    private Long postId;
+//
+//    @ManyToOne
+//    private Comment parentComment;
+//
+//    @Column(nullable = false, updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @PrePersist
+//    protected void onCreate() {
+//        createdAt = LocalDateTime.now();
+//    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
     private Long uid;
+
     private String content;
-    private int likes;
-    private Long postId;
 
-    @ManyToOne
-    private Comment parentComment;
-
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "comment_like_count")
+    private int commentLikeCount;
+
+    // 게시물과의 관계 설정
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    // 부모 댓글과의 관계 설정
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
+
+    // 대댓글과의 관계 설정
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    private List<Comment> childComments;
+
+    // 좋아요와의 관계 설정
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> likes;
+
+    // 생성 시간 자동 설정
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -35,12 +75,21 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public Long getUid() {
+
+    public Long getuid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
+    public void setuid(Long uid) {
         this.uid = uid;
+    }
+
+    public Post getPost_in_Comment() {
+        return post;
+    }
+
+    public void setPost_in_Commnent(Post post) {
+        this.post = post;
     }
 
     public String getContent() {
@@ -52,11 +101,11 @@ public class Comment {
     }
 
     public int getLikes() {
-        return likes;
+        return commentLikeCount;
     }
 
     public void setLikes(int likes) {
-        this.likes = likes;
+        this.commentLikeCount = likes;
     }
 
     public Comment getParentComment() {
@@ -67,19 +116,7 @@ public class Comment {
         this.parentComment = parentComment;
     }
 
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

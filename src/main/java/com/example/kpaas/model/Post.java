@@ -3,31 +3,91 @@ package com.example.kpaas.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
-    private String title;
-    private String content;
-    private int view;
-    private int like;
-    private int scraps;
-    private int comments;
-    private LocalDate date;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long postId;
+//    private String title;
+//    private String content;
+//    private int view;
+//    private int like;
+//    private int scraps;
+//    private int comments;
+//    private LocalDate date;
+//
+//    @ElementCollection
+//    @CollectionTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"))
+//    @Column(name = "category")
+//    private List<String> category;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long postId;
 
-    @ElementCollection
-    @CollectionTable(name = "post_category", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "category")
-    private List<String> category;
+    private Long uid;
+
+    private String title;
+
+    private String content;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "update_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "view_count")
+    private int viewCount;
+
+    @Column(name = "post_comment_count")
+    private int postCommentCount;
+
+    @Column(name = "post_like_count")
+    private int postLikeCount;
+
+    // 카테고리와의 관계 설정
+    @ManyToMany
+    @JoinTable(
+            name = "Post_Categories",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
+    // 이미지와의 관계 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostImage> images;
+
+    // 좋아요와의 관계 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostLike> likes;
+
+    // 스크랩과의 관계 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostScrap> scraps;
+
+    // 댓글과의 관계 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    // 생성 및 수정 시간 자동 설정
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     // Getters and setters
 
-    public Long getPostId() {
-        return postId;
-    }
+    public Long getPostId() { return postId; }
 
     public void setPostId(Long postId) {
         this.postId = postId;
@@ -50,50 +110,40 @@ public class Post {
     }
 
     public int getView() {
-        return view;
+        return viewCount;
     }
 
     public void setView(int view) {
-        this.view = view;
+        this.viewCount = view;
     }
 
     public int getLike() {
-        return like;
+        return postLikeCount;
     }
 
     public void setLike(int like) {
-        this.like = like;
+        this.postLikeCount = like;
     }
 
-    public int getScraps() {
-        return scraps;
+    public int getCommentsCount() {
+        return postCommentCount;
     }
 
-    public void setScraps(int scraps) {
-        this.scraps = scraps;
+    public void setCommentsCount(int comments) {
+        this.postCommentCount = comments;
     }
 
-    public int getComments() {
-        return comments;
+    public LocalDateTime getCreatedAtDate() {
+        return createdAt;
     }
 
-    public void setComments(int comments) {
-        this.comments = comments;
+    public LocalDateTime getUpdatedAtAtDate() {
+        return updatedAt;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public void setDate(LocalDateTime date) {
+        this.updatedAt = date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
-    public List<String> getCategory() {
-        return category;
-    }
-
-    public void setCategory(List<String> category) {
-        this.category = category;
-    }
 }

@@ -1,20 +1,17 @@
 package com.example.kpaas.dto.response;
 
 public class CommentLikeResponse {
-    private Long commentId;
-    private int likes;
 
-    // Default constructor
-    public CommentLikeResponse() {
-    }
+    private Long commentId; // 댓글 ID
+    private int likes;      // 현재 좋아요 수
 
-    // Constructor with parameters
+    // Constructor
     public CommentLikeResponse(Long commentId, int likes) {
         this.commentId = commentId;
         this.likes = likes;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public Long getCommentId() {
         return commentId;
     }

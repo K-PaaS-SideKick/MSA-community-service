@@ -10,4 +10,26 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE EXISTS (SELECT c FROM p.category c WHERE c IN :categories) AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.content) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Post> searchPosts(@Param("categories") List<String> categories, @Param("query") String query);
+
+    /*
+    // 게시물 검색 by 카테고리 및 키워드
+    @Query("SELECT p FROM Post p WHERE EXISTS (SELECT c FROM PostCategory c WHERE c.post = p AND c.categoryName IN :categories) AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.content) LIKE LOWER(CONCAT('%', :query, '%')))")
+    List<Post> searchPosts(@Param("categories") List<String> categories, @Param("query") String query);
+
+    // 특정 게시물의 좋아요 수 조회
+    @Query("SELECT COUNT(pl) FROM PostLike pl WHERE pl.post.id = :postId")
+    int findPostLikeCount(@Param("postId") Long postId);
+
+    // 게시물에 포함된 이미지 목록 조회
+    @Query("SELECT pi.fileName, pi.filePath FROM PostImage pi WHERE pi.post.id = :postId")
+    List<Object[]> findPostImages(@Param("postId") Long postId);
+
+    // 특정 게시물의 댓글 수 조회
+    @Query("SELECT p.postCommentCount FROM Post p WHERE p.id = :postId")
+    int findPostCommentCount(@Param("postId") Long postId);
+
+    // 게시물 스크랩 수 조회
+    @Query("SELECT COUNT(ps) FROM PostScrap ps WHERE ps.post.id = :postId")
+    int findPostScrapCount(@Param("postId") Long postId);*/
+
 }

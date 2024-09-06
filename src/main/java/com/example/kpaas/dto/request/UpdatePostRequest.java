@@ -1,13 +1,12 @@
 package com.example.kpaas.dto.request;
 
-import java.util.List;
-
 public class UpdatePostRequest {
-    private String title;
-    private String content;
-    private List<String> category;
 
-    // Getters and setters
+    private String title;       // 게시물 제목
+    private String content;     // 게시물 내용
+    private String categoryName; // 게시물 카테고리
+
+    // Getters and Setters
     public String getTitle() {
         return title;
     }
@@ -24,11 +23,11 @@ public class UpdatePostRequest {
         this.content = content;
     }
 
-    public List<String> getCategory() {
-        return category;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategory(List<String> category) {
-        this.category = category;
+    public void setCategoryName(String category) {
+        this.categoryName = category;
     }
 }
