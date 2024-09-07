@@ -25,7 +25,14 @@ public class PostScrap {
         createdAt = LocalDateTime.now();
     }
 
+    private String accessToken;
+
     // Getter 및 Setter 메서드들
+
+    public Post getPost() { return post; }
+
+    public void setPost(Post post) { this.post = post; }
+
     public Long getScraps() {
         return scrapId;
     }
@@ -33,4 +40,10 @@ public class PostScrap {
     public void setScraps(Long scraps) {
         this.scrapId = scraps;
     }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
 }

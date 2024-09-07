@@ -1,6 +1,5 @@
 package com.example.kpaas.dto.response;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,9 +11,9 @@ public class PostDetails {
     private LocalDateTime date;    // 게시물 작성 일시
     private int view;          // 조회 수
     private int like;          // 좋아요 수
-    private Long scraps;        // 스크랩 수
+    private int scraps;        // 스크랩 수
     private int comments;      // 댓글 수
-    private String category; // 게시물 카테고리
+    private List<String> category; // 게시물 카테고리
 
     // Getters and Setters
     public Long getPostId() {
@@ -65,11 +64,11 @@ public class PostDetails {
         this.like = like;
     }
 
-    public Long getScraps() {
+    public int getScraps() {
         return scraps;
     }
 
-    public void setScraps(Long scraps) {
+    public void setScraps(int scraps) {
         this.scraps = scraps;
     }
 
@@ -81,11 +80,11 @@ public class PostDetails {
         this.comments = comments;
     }
 
-    public String getCategory() {
+    public List<String> getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(List<String> category) {
         this.category = category;
     }
 }

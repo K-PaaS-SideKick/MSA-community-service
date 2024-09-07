@@ -14,6 +14,10 @@ public class CommentResponse {
     public CommentResponse(Long commentId, String content, LocalDateTime createdAt) {
     }
 
+    public CommentResponse() {
+
+    }
+
     // Getters and Setters
     public Long getCommentId() {
         return commentId;

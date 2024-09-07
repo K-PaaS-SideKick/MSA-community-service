@@ -3,8 +3,10 @@ package com.example.kpaas.service;
 import com.example.kpaas.dto.request.*;
 import com.example.kpaas.dto.response.*;
 import com.example.kpaas.model.*;
+import com.example.kpaas.repository.CategoryRepository;
 import com.example.kpaas.repository.PostRepository;
 import com.example.kpaas.repository.CommentRepository;
+import com.example.kpaas.repository.PostScrapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,10 @@ public class PostService {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private PostScrapRepository postScrapRepository;
+
+
     public List<PostResponse> getPosts(int page, String sortBy) {
         // 페이지네이션과 정렬 처리
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sortBy));
@@ -43,10 +49,9 @@ public class PostService {
         // 게시물 상세보기
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 
-        List<Comment> comments = commentRepository.findByPostId(postId);
-        List<Category> category = CategoryRepository.findByPostId(postId);
-        List<PostScrap> scraps = postScrapRepository.findByPostId(postId);
-        return convertToDetails(post, category, scraps);
+        List<Category> category = post.getCategories();
+
+        return convertToDetails(post, category);
     }
 
     public PostResponse createPost(String accessToken, CreatePostRequest request) {
@@ -102,23 +107,43 @@ public class PostService {
 
     public ScrapResponse scrapPost(Long postId, String accessToken) {
         // 게시물 스크랩 처리
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // 사용자가 이미 스크랩했는지 확인
+        if (postScrapRepository.existsByPostIdAndAccessToken(postId, accessToken)) {
+            throw new RuntimeException("Post already scraped by the user");
+        }
+
         PostScrap postScrap = new PostScrap();
-        postScrap.setScraps(postScrap.getScraps() + 1);
+        postScrap.setPost(post);
+        postScrap.setAccessToken(accessToken);
+        postScrapRepository.save(postScrap);
+
+        post.setPostScrapCount(post.getPostScrapCount() + 1);  // 스크랩 수 증가
         postRepository.save(post);
-        return new ScrapResponse(post.getPostId(), postScrap.getScraps());
+
+        return new ScrapResponse(post.getPostId(), post.getPostScrapCount());
     }
 
     public ScrapResponse unscrapPost(Long postId, String accessToken) {
         // 게시물 스크랩 취소 처리
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-        PostScrap postScrap = new PostScrap();
-        postScrap.setScraps(postScrap.getScraps() - 1);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // 스크랩한 기록을 확인
+        PostScrap postScrap = postScrapRepository.findByPostIdAndAccessToken(postId, accessToken)
+                .orElseThrow(() -> new RuntimeException("Scrap not found"));
+
+        postScrapRepository.delete(postScrap);  // 스크랩 삭제
+
+        post.setPostScrapCount(post.getPostScrapCount() - 1);  // 스크랩 수 감소
         postRepository.save(post);
-        return new ScrapResponse(post.getPostId(), postScrap.getScraps());
+
+        return new ScrapResponse(post.getPostId(), post.getPostScrapCount());
     }
 
-    private PostDetails convertToDetails(Post post, List<Category> category, List<PostScrap> postScrap) {
+    private PostDetails convertToDetails(Post post, List<Category> category) {
         // 게시물 상세 정보를 변환
         PostDetails details = new PostDetails();
         details.setPostId(post.getPostId());
@@ -127,9 +152,12 @@ public class PostService {
         details.setDate(post.getCreatedAtDate());
         details.setView(post.getView());
         details.setLike(post.getLike());
-        details.setScraps(postScrap.getScraps());
+        details.setScraps(post.getPostScrapCount());
         details.setComments(post.getCommentsCount());
-        details.setCategory(category.getCategoryName());
+        List<String> categoryNames = category.stream()
+                .map(Category::getCategoryName)  // Category 객체에서 categoryName 추출
+                .collect(Collectors.toList());
+        details.setCategory(categoryNames);
         return details;
     }
 }

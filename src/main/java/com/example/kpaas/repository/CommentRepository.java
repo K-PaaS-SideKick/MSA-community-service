@@ -8,33 +8,20 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByParentCommentIsNull();
 
-    List<Comment> findByParentCommentUid(Long parentCommentId);
+    // 특정 게시물에 속한 댓글 조회
+    @Query("SELECT c FROM Comment c WHERE c.post.postId = :postId")
+    List<Comment> findCommentsByPostId(@Param("postId") Long postId);
 
-    List<Comment> findByPostId(Long postId);
+    // 부모 댓글에 속한 대댓글 조회
+    @Query("SELECT c FROM Comment c WHERE c.parentComment.commentId = :parentCommentId")
+    List<Comment> findChildComments(@Param("parentCommentId") Long parentCommentId);
 
-/*
-    @Query("SELECT c FROM Comment c WHERE c.postId = :postId")
-    List<Comment> findByPostId(@Param("postId") Long postId);
-*/
-
-    /*
-    // 최상위 댓글 조회
-    List<Comment> findByParentCommentIsNull();
-
-    // 특정 부모 댓글의 대댓글 조회
-    List<Comment> findByParentCommentUid(Long parentCommentId);
-
-    // 특정 게시물의 댓글 조회
-    List<Comment> findByPostId(Long postId);
-
-    // 특정 게시물의 댓글 수 조회
-    @Query("SELECT COUNT(c) FROM Comment c WHERE c.postId = :postId")
-    int countCommentsByPostId(@Param("postId") Long postId);
+    // 특정 사용자가 작성한 댓글 조회
+    @Query("SELECT c FROM Comment c WHERE c.uid = :uid")
+    List<Comment> findCommentsByUser(@Param("uid") Long uid);
 
     // 특정 댓글의 좋아요 수 조회
-    @Query("SELECT c.commentLikeCount FROM Comment c WHERE c.id = :commentId")
-    int findCommentLikeCountById(@Param("commentId") Long commentId);
-    */
+    @Query("SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.commentId = :commentId")
+    int findCommentLikeCount(@Param("commentId") Long commentId);
 }

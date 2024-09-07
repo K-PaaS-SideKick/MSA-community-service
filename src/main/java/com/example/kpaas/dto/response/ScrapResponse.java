@@ -6,7 +6,7 @@ public class ScrapResponse {
     private int scraps; // 현재 스크랩 수
 
     // Constructor
-    public ScrapResponse(Long postId, Long scraps) {
+    public ScrapResponse(Long postId, int scraps) {
         this.postId = postId;
         this.scraps = scraps;
     }

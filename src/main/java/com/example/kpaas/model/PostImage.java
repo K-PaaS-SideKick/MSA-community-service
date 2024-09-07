@@ -14,27 +14,20 @@ public class PostImage {
     @JoinColumn(name = "post_id", nullable = false)  // post_id는 필수
     private Post post;
 
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
-
     @Column(name = "file_path", nullable = false)
     private String filePath;
 
     @Column(name = "file_type", nullable = false)
     private String fileType;
 
-    @Column(name = "file_size", nullable = false)
-    private String fileSize;
 
     // 기본 생성자
     public PostImage() {}
 
     public PostImage(Post post, String fileName, String filePath, String fileType, String fileSize) {
         this.post = post;
-        this.fileName = fileName;
         this.filePath = filePath;
         this.fileType = fileType;
-        this.fileSize = fileSize;
     }
 
     // Getters and Setters
@@ -54,14 +47,6 @@ public class PostImage {
         this.post = post;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getFilePath() {
         return filePath;
     }
@@ -78,11 +63,4 @@ public class PostImage {
         this.fileType = fileType;
     }
 
-    public String getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
-    }
 }

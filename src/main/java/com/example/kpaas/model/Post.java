@@ -48,6 +48,9 @@ private Long postId;
     @Column(name = "post_like_count")
     private int postLikeCount;
 
+    @Column(name = "post_scrap_count")
+    private int postScrapCount;
+
     // 카테고리와의 관계 설정
     @ManyToMany
     @JoinTable(
@@ -133,6 +136,10 @@ private Long postId;
         this.postCommentCount = comments;
     }
 
+    public int getPostScrapCount() { return postScrapCount; }
+
+    public void setPostScrapCount(int postScrapCount) { this.postScrapCount = postScrapCount; }
+
     public LocalDateTime getCreatedAtDate() {
         return createdAt;
     }
@@ -140,6 +147,10 @@ private Long postId;
     public LocalDateTime getUpdatedAtAtDate() {
         return updatedAt;
     }
+
+    public List<Category> getCategories() { return categories; }
+
+    public void setCategories(List<Category> categories) { this.categories = categories; }
 
     public void setDate(LocalDateTime date) {
         this.updatedAt = date;

@@ -33,7 +33,7 @@ public class CommentService {
 
     public List<CommentResponse> getCommentsByPost(Long postId) {
         // 특정 게시물에 대한 댓글 가져오기
-        List<Comment> comments = commentRepository.findByPostId(postId);
+        List<Comment> comments = commentRepository.findCommentsByPostId(postId);
         return comments.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
