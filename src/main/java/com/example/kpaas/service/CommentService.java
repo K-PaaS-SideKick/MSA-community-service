@@ -4,7 +4,9 @@ import com.example.kpaas.dto.request.CommentRequest;
 import com.example.kpaas.dto.response.CommentLikeResponse;
 import com.example.kpaas.dto.response.CommentResponse;
 import com.example.kpaas.model.Comment;
+import com.example.kpaas.model.Post;
 import com.example.kpaas.repository.CommentRepository;
+import com.example.kpaas.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     public CommentLikeResponse likeComment(String accessToken, CommentRequest request) {
         // 좋아요 기능 로직
@@ -35,6 +40,25 @@ public class CommentService {
         // 특정 게시물에 대한 댓글 가져오기
         List<Comment> comments = commentRepository.findCommentsByPostId(postId);
         return comments.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
+    public CommentResponse addReply(Long postId, Long parentCommentId, CommentRequest request) {
+        // 답글 추가 로직
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() -> new RuntimeException("Parent comment not found"));
+
+        Comment reply = new Comment();
+        reply.setContent(request.getContent());
+        reply.setPost_in_Commnent(post);
+        reply.setParentComment(parentComment);
+
+        commentRepository.save(reply);
+
+        // 댓글 수 업데이트
+        post.setCommentsCount(post.getCommentsCount() + 1);
+        postRepository.save(post);
+
+        return new CommentResponse(reply.getCommentId(), reply.getContent(), reply.getCreatedAt());
     }
 
     private CommentResponse convertToResponse(Comment comment) {

@@ -91,12 +91,17 @@ public class PostService {
     }
 
     public CommentResponse addComment(String accessToken, CommentRequest request) {
-        // 댓글 추가
+        // 댓글 답글 추가
         Post post = postRepository.findById(request.getPostId_Comment()).orElseThrow(() -> new RuntimeException("Post not found"));
         Comment comment = new Comment();
         comment.setContent(request.getContent());
         comment.setPost_in_Commnent(post);
-        comment.setParentComment(request.getParentComment() != null ? commentRepository.findById(request.getParentComment()).orElse(null) : null);
+        // 답글 여부 확인 (parentCommentId가 존재하면 답글로 처리)
+        if (request.getParentComment() != null) {
+            Comment parentComment = commentRepository.findById(request.getParentComment()).orElseThrow(() -> new RuntimeException("Parent comment not found"));
+            comment.setParentComment(parentComment);
+        }
+
         commentRepository.save(comment);
 
         post.setCommentsCount(post.getCommentsCount() + 1);  // 댓글 수 업데이트
