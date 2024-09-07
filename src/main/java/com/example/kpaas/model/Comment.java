@@ -119,4 +119,12 @@ public class Comment {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public List<Comment> getChildComments() {
+        return childComments;
+    }
+
+    public void setChildComments(List<Comment> childComments) {
+        this.childComments = childComments;
+    }
 }

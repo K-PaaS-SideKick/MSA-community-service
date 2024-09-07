@@ -30,20 +30,29 @@ public class CommentService {
         return new CommentLikeResponse(comment.getCommentId(), comment.getLikes());
     }
 
+    // 댓글 삭제 로직
     public void deleteComment(Long commentId, String accessToken) {
-        // 댓글 삭제 로직
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));
         commentRepository.delete(comment);
+        Post post = comment.getPost_in_Comment();
+        post.setCommentsCount(post.getCommentsCount() - 1);  // 게시물의 댓글 수 업데이트
+        postRepository.save(post);
     }
 
+    // 게시물에 대한 댓글 및 답글 가져오기
     public List<CommentResponse> getCommentsByPost(Long postId) {
-        // 특정 게시물에 대한 댓글 가져오기
         List<Comment> comments = commentRepository.findCommentsByPostId(postId);
-        return comments.stream().map(this::convertToResponse).collect(Collectors.toList());
+
+        // 댓글과 답글 계층 구조로 변환
+        List<CommentResponse> responses = comments.stream()
+                .filter(comment -> comment.getParentComment() == null)  // 부모 댓글만 필터링
+                .map(this::convertToResponseWithReplies)  // 댓글과 답글을 함께 변환
+                .collect(Collectors.toList());
+        return responses;
     }
 
+    // 답글 추가 로직
     public CommentResponse addReply(Long postId, Long parentCommentId, CommentRequest request) {
-        // 답글 추가 로직
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(() -> new RuntimeException("Parent comment not found"));
 
@@ -54,11 +63,23 @@ public class CommentService {
 
         commentRepository.save(reply);
 
-        // 댓글 수 업데이트
-        post.setCommentsCount(post.getCommentsCount() + 1);
+        post.setCommentsCount(post.getCommentsCount() + 1);  // 댓글 수 업데이트
         postRepository.save(post);
 
         return new CommentResponse(reply.getCommentId(), reply.getContent(), reply.getCreatedAt());
+    }
+
+    // 댓글과 답글 계층 구조로 변환하는 메서드
+    private CommentResponse convertToResponseWithReplies(Comment comment) {
+        CommentResponse response = convertToResponse(comment);
+
+        // 대댓글 가져오기
+        List<CommentResponse> childComments = comment.getChildComments().stream()
+                .map(this::convertToResponse)  // 대댓글도 CommentResponse로 변환
+                .collect(Collectors.toList());
+
+        response.setChildComments(childComments);  // 답글 리스트 추가
+        return response;
     }
 
     private CommentResponse convertToResponse(Comment comment) {

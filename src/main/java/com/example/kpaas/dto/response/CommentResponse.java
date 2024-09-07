@@ -1,6 +1,7 @@
 package com.example.kpaas.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CommentResponse {
 
@@ -10,6 +11,7 @@ public class CommentResponse {
     private String content;          // 댓글 내용
     private int likes;               // 좋아요 수
     private LocalDateTime createdAt; // 생성 일시
+    private List<CommentResponse> childComments;  // 답글 리스트
 
     public CommentResponse(Long commentId, String content, LocalDateTime createdAt) {
     }
@@ -66,4 +68,10 @@ public class CommentResponse {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public List<CommentResponse> getChildComments() { return childComments; }
+
+    public void setChildComments(List<CommentResponse> childComments) { this.childComments = childComments; }
+
+
 }
