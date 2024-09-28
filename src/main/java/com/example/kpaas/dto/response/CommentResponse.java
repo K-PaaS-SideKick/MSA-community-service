@@ -1,26 +1,16 @@
 package com.example.kpaas.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class CommentResponse {
+    private Long commentId;
+    private Long uid;
+    private LocalDateTime createdAt;
+    private String content;
+    private Long parentComment;
 
-    private Long commentId;          // 댓글 ID
-    private Long postId;             // 게시물 ID
-    private Long parentComment;      // 부모 댓글 ID (답글일 경우)
-    private String content;          // 댓글 내용
-    private int likes;               // 좋아요 수
-    private LocalDateTime createdAt; // 생성 일시
-    private List<CommentResponse> childComments;  // 답글 리스트
+    // Getters and setters
 
-    public CommentResponse(Long commentId, String content, LocalDateTime createdAt) {
-    }
-
-    public CommentResponse() {
-
-    }
-
-    // Getters and Setters
     public Long getCommentId() {
         return commentId;
     }
@@ -29,36 +19,12 @@ public class CommentResponse {
         this.commentId = commentId;
     }
 
-    public Long getPostId() {
-        return postId;
+    public Long getUid() {
+        return uid;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public Long getParentComment() {
-        return parentComment;
-    }
-
-    public void setParentComment(Long parentComment) {
-        this.parentComment = parentComment;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -69,9 +35,19 @@ public class CommentResponse {
         this.createdAt = createdAt;
     }
 
-    public List<CommentResponse> getChildComments() { return childComments; }
+    public String getContent() {
+        return content;
+    }
 
-    public void setChildComments(List<CommentResponse> childComments) { this.childComments = childComments; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
+    public Long getParentComment() {
+        return parentComment;
+    }
 
+    public void setParentComment(Long parentComment) {
+        this.parentComment = parentComment;
+    }
 }

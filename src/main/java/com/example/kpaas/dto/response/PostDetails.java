@@ -4,18 +4,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostDetails {
-
-    private Long postId;       // 게시물 ID
-    private String title;      // 게시물 제목
-    private String content;    // 게시물 내용
-    private LocalDateTime date;    // 게시물 작성 일시
-    private int view;          // 조회 수
-    private int like;          // 좋아요 수
-    private int scraps;        // 스크랩 수
-    private int comments;      // 댓글 수
-    private List<String> category; // 게시물 카테고리
-
-    // Getters and Setters
+    private Long postId;
+    private String title;
+    private byte[] image;
+    private String content;
+    private int view;
+    private int upvote;
+    private int scraps;
+    private int comments;
+    private LocalDateTime date;
+    private List<CommentResponse> commentList;
+    private List<String> category;
+    //testtest
+    // Getters and setters
     public Long getPostId() {
         return postId;
     }
@@ -32,20 +33,20 @@ public class PostDetails {
         this.title = title;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
     }
 
     public int getView() {
@@ -56,12 +57,12 @@ public class PostDetails {
         this.view = view;
     }
 
-    public int getLike() {
-        return like;
+    public int getUpvote() {
+        return upvote;
     }
 
-    public void setLike(int like) {
-        this.like = like;
+    public void setUpvote(int upvote) {
+        this.upvote = upvote;
     }
 
     public int getScraps() {
@@ -78,6 +79,22 @@ public class PostDetails {
 
     public void setComments(int comments) {
         this.comments = comments;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public List<CommentResponse> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<CommentResponse> commentList) {
+        this.commentList = commentList;
     }
 
     public List<String> getCategory() {

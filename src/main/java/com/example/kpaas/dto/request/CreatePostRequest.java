@@ -1,18 +1,29 @@
 package com.example.kpaas.dto.request;
 
+import java.util.List;
+
 public class CreatePostRequest {
+    private String title;
+    private List<byte[]> projectImg;
+    private String content;
+    private List<String> category;
 
-    private String title;       // 게시물 제목
-    private String content;     // 게시물 내용
-    private String categoryName; // 게시물 카테고리
+    // Getters and setters
 
-    // Getters and Setters
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<byte[]> getProjectImg() {
+        return projectImg;
+    }
+
+    public void setProjectImg(List<byte[]> projectImg) {
+        this.projectImg = projectImg;
     }
 
     public String getContent() {
@@ -23,11 +34,11 @@ public class CreatePostRequest {
         this.content = content;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public List<String> getCategory() {
+        return category;
     }
 
-    public void setCategoryName(String category) {
-        this.categoryName = category;
+    public void setCategory(List<String> category) {
+        this.category = category;
     }
 }

@@ -1,12 +1,12 @@
 package com.example.kpaas.dto.response;
 
-public class ScrapResponse {
+public class UpvoteResponse {
     private Long postId;
-    private int scraps;
+    private int upvotes;
 
-    public ScrapResponse(Long postId, int scraps) {
+    public UpvoteResponse(Long postId, int upvotes) {
         this.postId = postId;
-        this.scraps = scraps;
+        this.upvotes = upvotes;
     }
 
     // Getters and setters
@@ -18,11 +18,11 @@ public class ScrapResponse {
         this.postId = postId;
     }
 
-    public int getScraps() {
-        return scraps;
+    public int getUpvotes() {
+        return upvotes;
     }
 
-    public void setScraps(int scraps) {
-        this.scraps = scraps;
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
     }
 }
