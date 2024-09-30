@@ -13,9 +13,11 @@ import java.util.List;
 @Setter
 public class Post {
     @Id
-    private String uid;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
     private Long postId;
+    @Column(name = "user_id", nullable = false)
+    private String uid;
     @Column(length = 255) // length를 설정하여 VARCHAR로 제한
     private String title;
     @Lob

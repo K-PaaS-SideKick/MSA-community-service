@@ -14,8 +14,7 @@ import java.io.Serializable;
 public class Commentupvote {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn()
-    @Column(name = "comment_id", nullable = false)
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment commentId;
 
     @Id

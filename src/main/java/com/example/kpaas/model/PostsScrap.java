@@ -10,11 +10,14 @@ import lombok.Setter;
 @Setter
 public class PostsScrap {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "scrap_id")
+    private Long scrap_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", insertable = false, nullable = false)
     private Post post;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Scrap_id;
 
     @Column(name = "post_id", nullable = false)
     private Long postId;

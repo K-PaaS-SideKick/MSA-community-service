@@ -13,8 +13,9 @@ public class PostCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Category_id;
 
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     @Column(name = "category", nullable = false)
     private String category;

@@ -47,8 +47,7 @@ public class PostService {
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setCategory(request.getCategory());
-        post.setDate(LocalDateTime.now());
+        post.setCreatedAt(LocalDateTime.now());
         postRepository.save(post);
         return new PostResponse(post.getPostId(), post.getTitle());
     }
@@ -57,7 +56,6 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setCategory(request.getCategory());
         postRepository.save(post);
         return new PostResponse(post.getPostId(), post.getTitle());
     }
@@ -76,12 +74,12 @@ public class PostService {
     public CommentResponse addComment(String accessToken, CommentRequest request) {
         Comment comment = new Comment();
         comment.setContent(request.getContent());
-        comment.setCommentPostId(request.getPostId());
+        comment.setPost(request.getPost());
         comment.setParentComment(request.getParentComment() != null ? commentRepository.findById(request.getParentComment()).orElse(null) : null);
         commentRepository.save(comment);
 
         Post post = postRepository.findById(request.getPostId()).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setComments(post.getComments() + 1);
+        post.setComment_count(post.getComment_count() + 1);
         postRepository.save(post);
 
         return new CommentResponse(); // 필요한 정보를 설정해 주세요
@@ -106,12 +104,12 @@ public class PostService {
         details.setPostId(post.getPostId());
         details.setTitle(post.getTitle());
         details.setContent(post.getContent());
-        details.setDate(post.getDate());
+        details.setDate(post.getCreatedAt());
         details.setView(post.getView());
         details.setUpvote(post.getUpvote());
         details.setScraps(post.getScraps());
-        details.setComments(post.getComments());
-        details.setCategory(post.getCategory());
+        details.setComments(post.getComment_count());
+        //details.setCategory(post.getCategory());
         return details;
     }
 }
